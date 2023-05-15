@@ -1,5 +1,7 @@
 import React, { Component, useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, TextInput, View, Button, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import axios, { AxiosError } from 'axios';
 
@@ -16,34 +18,47 @@ const Login = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.post('https://portalgpsgenesis.com.br/public/api/login', formData);
+      const response = await axios.post('https://e510-191-240-100-33.ngrok-free.app/api/login', formData);
+      if(response.status == 200){
+
+        const token = response.data.data.token;
+        try {
+          await AsyncStorage.setItem('token', token);
+          navigation.navigate('menu1')
+        } catch (error) {
+          console.error(error);
+        }
+
+
+        alert('foi hein kakkaka');
+      }
       alert(response.data.message);
     } catch (error) {
       console.log(error);
       alert(error);
     }
   };
-  const handleLoginFake = async () => {
-    const formData = {
-      email: email,
-      password: password,
-    };
+  // const handleLoginFake = async () => {
+  //   const formData = {
+  //     email: email,
+  //     password: password,
+  //   };
 
-    if(email == 'henriquepro8@gmail.com' && password == '12345678'){
-      navigation.navigate('menu1')
-    }
-    else{
-      alert('Usuário ou senha inválidos!')
-    }
+  //   if(email == 'henriquepro8@gmail.com' && password == '12345678'){
+  //     navigation.navigate('menu1')
+  //   }
+  //   else{
+  //     alert('Usuário ou senha inválidos!')
+  //   }
 
-    try {
-      const response = await axios.post('https://portalgpsgenesis.com.br/public/api/login', formData);
-      alert(response.data.message);
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
-  };
+  //   try {
+  //     const response = await axios.post('https://e510-191-240-100-33.ngrok-free.app/api/login', formData);
+  //     alert(response.data.message);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert(error);
+  //   }
+  // };
 
   return (
     <>
@@ -72,7 +87,7 @@ const Login = ({ navigation }) => {
           onPress={handleLoginFake}
           // onPress={() => navigation.navigate('menu1')}
 /> */}
-          <TouchableOpacity className='bg-blue-500 p-3 rounded-md' onPress={handleLoginFake}>
+          <TouchableOpacity className='bg-blue-500 p-3 rounded-md' onPress={handleLogin}>
             <Text className='text-white text-center' >Entrar</Text>
           </TouchableOpacity>
 
