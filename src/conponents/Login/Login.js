@@ -18,47 +18,45 @@ const Login = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.post('https://e510-191-240-100-33.ngrok-free.app/api/login', formData);
-      if(response.status == 200){
-
-        const token = response.data.data.token;
-        try {
-          await AsyncStorage.setItem('token', token);
-          navigation.navigate('menu1')
-        } catch (error) {
-          console.error(error);
-        }
-
-
-        alert('foi hein kakkaka');
+      
+      if(formData.email == 'henriquepro8@gmail.com' && formData.password == '123456'){
+        navigation.navigate('menu1')
       }
-      alert(response.data.message);
+
+      
     } catch (error) {
       console.log(error);
       alert(error);
     }
   };
-  // const handleLoginFake = async () => {
+  // const handleLogin = async () => {
   //   const formData = {
   //     email: email,
   //     password: password,
   //   };
 
-  //   if(email == 'henriquepro8@gmail.com' && password == '12345678'){
-  //     navigation.navigate('menu1')
-  //   }
-  //   else{
-  //     alert('Usuário ou senha inválidos!')
-  //   }
-
   //   try {
-  //     const response = await axios.post('https://e510-191-240-100-33.ngrok-free.app/api/login', formData);
+  //     const response = await axios.post('https://4c99-191-53-92-193.ngrok-free.app/api/login', formData);
+  //     if(response.status == 200){
+
+  //       const token = response.data.data.token;
+  //       try {
+  //         await AsyncStorage.setItem('token', token);
+  //         navigation.navigate('menu1')
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+
+
+        
+  //     }
   //     alert(response.data.message);
   //   } catch (error) {
   //     console.log(error);
   //     alert(error);
   //   }
   // };
+  
 
   return (
     <>

@@ -1,50 +1,49 @@
-import React, { Component, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Button, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, View } from 'react-native';
+import { Camera } from 'expo-camera';
 
+function Menu() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const cameraRef = useRef(null);
 
-import axios, { AxiosError } from 'axios';
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
-
-const showJwt = async () => {
-  
-      try {
-        const token = await AsyncStorage.getItem('token');
-        if (token !== null) {
-          alert(token);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-  
-  
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
 
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 0.5, base64: true, skipProcessing: false };
+      let photo = await cameraRef.current.takePictureAsync(options);
+      console.log(photo.uri);
+    }
+  };
 
-function Menu({ navigation }) {
   return (
-    
-
-        <View className='flex-1 justify-center items-center bg-green-500'>
-
-
-          <Text className='text-3xl font-bold mb-4 text-cyan-100'>Tela Inicial</Text>
-
-          <TouchableOpacity className='bg-blue-500 p-3 rounded-md' onPress={showJwt}>
-            <Text className='text-white text-center' >Clique aqui</Text>
-          </TouchableOpacity>
-
-          
-                
-                
-              
-            </View>
-
-
-      
-    
+    <View style={{ flex: 1 }}>
+      <Camera style={{ flex: 1 }} type={Camera.Constants.Type.back} ref={cameraRef}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+          }}>
+          <Button title={'Capture'} onPress={takePicture} />
+        </View>
+      </Camera>
+    </View>
   );
 }
-
 
 export default Menu;
