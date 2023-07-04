@@ -14,6 +14,7 @@ import Screen2 from "./src/conponents/Menu/Menu2.js";
 import Screen3 from "./src/conponents/Menu/MenuPrincipal.js";
 import Screen4 from "./src/conponents/Menu/MenuCadastroDiacono.js";
 import Screen5 from "./src/conponents/Menu/MenuListaDiacono.js";
+import Screen6 from "./src/conponents/Menu/MenuEditaDiacono.js";
 
 
 const Stack = createStackNavigator();
@@ -51,6 +52,7 @@ export default function App() {
               <Stack.Screen name="menuPrincipal" component={Screen3} />
               <Stack.Screen name="menuCadastroDiacono" component={Screen4} />
               <Stack.Screen name="menuListaDiacono" component={Screen5} />
+              <Stack.Screen name="menuEditaDiacono" component={Screen6} />
               
           </Stack.Navigator>
 

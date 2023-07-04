@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { StyleSheet, TextInput, View, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, ActivityIndicator, TextInput, View, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Box, VStack, Input, Center, Button, HStack, Text, Icon, Divider, Menu, HamburgerIcon, Pressable } from 'native-base';
 import apiUrl from '../../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ const MenuListaDiacono = ({navigation}) => {
 
     const [idDiacono, setIdDiacono] = useState([]);
     
+    const [loading, setLoading] = useState(true); // Estado de carregamento
 
     
 
@@ -40,6 +41,9 @@ const MenuListaDiacono = ({navigation}) => {
         catch(error){
             console.log(error)
         }
+        finally {
+          setLoading(false); // Altera o estado de carregamento para false após a resposta da API
+        }
         
       }
 
@@ -50,6 +54,8 @@ const MenuListaDiacono = ({navigation}) => {
 
     const editaDiacono = async (id) => {
         setIdDiacono(id)
+        navigation.navigate('menuEditaDiacono', { idDiacono: id });
+
     }
     const deletaDiacono = async (id) => {
         setIdDiacono(id);
@@ -58,7 +64,7 @@ const MenuListaDiacono = ({navigation}) => {
           try {
             const token = await AsyncStorage.getItem('token');
             if (token) {
-              const response = await axios.delete(`${apiUrl}/api/diacono/${idDiacono}`, {
+              const response = await axios.delete(`${apiUrl}/api/diacono/${id}`, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
@@ -90,6 +96,16 @@ const MenuListaDiacono = ({navigation}) => {
         await apiDeletaDiacono(); // Chama a função para excluir o diacono
         await fetchData(); // Chama a função para atualizar os dados
       }
+
+      if (loading) {
+        // Exibe um indicador de carregamento enquanto espera a resposta da API
+        return (
+          <View style={styles.container}>
+            <ActivityIndicator size="large" color="blue" />
+          </View>
+        );
+      }
+
 
 
   return (
@@ -144,5 +160,13 @@ const MenuListaDiacono = ({navigation}) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default MenuListaDiacono;
